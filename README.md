@@ -1,3 +1,7 @@
+# Макет в Figma
+
+[Макет по ссылке](https://yadi.sk/d/0mcqyIuFK7XBRA).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
