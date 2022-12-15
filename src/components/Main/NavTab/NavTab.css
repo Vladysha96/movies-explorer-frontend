@@ -1,7 +1,7 @@
 .project-nav {
     display: flex;
-    justify-content: center;
-    margin: 0 auto 70px;
+    justify-content: flex-start;
+    margin: 0 70px 25px;
 }
 
 .project-nav__link {
@@ -21,4 +21,11 @@
 
 .project-nav__text {
     padding: 10px 20px;
+}
+
+@media screen and (max-width: 786px) {
+    .project-nav {
+        justify-content: center;
+        margin: 0 70px 0;
+    }
 }

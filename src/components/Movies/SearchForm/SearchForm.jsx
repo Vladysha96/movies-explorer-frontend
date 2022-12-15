@@ -23,7 +23,7 @@ function SearchForm() {
                     id="filter"
                 />
                 <label htmlFor="filter"></label>
-                <span className="search-form__switch-text">Короткометражные фильмы</span>
+                <span className="search-form__switch-text">Короткометражки</span>
             </div>
         </section>
     );
