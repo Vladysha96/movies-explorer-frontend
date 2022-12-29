@@ -1,27 +1,10 @@
-import { React, useState } from "react";
-import Logo from "../Logo/Logo";
-import "./Header.css";
-import Navigation from "../Navigation/Navigation";
-import BurgerMenu from './BurgerMenu/BurgerMenu';
+import './Header.css';
 
-function Header() {
-    const [burgerMenuOpen, setBurgerMenuOpen] = useState(false);
+function Header({ children, className }) {
+  let finalClassName = 'header';
+  if (className) finalClassName += ` ${className}`;
 
-    const toggleHamburger = () => {
-        setBurgerMenuOpen(!burgerMenuOpen);
-    };
-
-    return (
-        <header className="header">
-            <div className="header__container">
-                <Logo />
-                <Navigation />
-                <div className="header__burger-menu" onClick={toggleHamburger}>
-                    <BurgerMenu isOpen={burgerMenuOpen} />
-                </div>
-            </div>
-        </header>
-    );
+  return <header className={finalClassName}>{children}</header>;
 }
 
 export default Header;
