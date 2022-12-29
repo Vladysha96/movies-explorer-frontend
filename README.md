@@ -1,5 +1,9 @@
 # REACT MOVIES EXPLORER FRONTEND
 
+## Ссылка на пулл-реквест
+
+<https://github.com/Vladysha96/movies-explorer-frontend/pull/2>
+
 ## Посмотреть проект
 
 <https://vladysha96.movies.nomoredomains.club/>
