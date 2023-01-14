@@ -1,55 +1,98 @@
-export default class MainApi {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
-  }
+export const BASE_URL = "http://api.vladysha96.movies.nomoredomains.club/";
 
-  _handleResponse = (response) =>
-    response.ok
-      ? response.json()
-      : Promise.reject(Error(`Ошибка, код: ${response.status}`));
+function request({ url, method = "POST", data, token }) {
+    return fetch(`${BASE_URL}${url}`, {
+        credentials: "include",
+        mode: "cors",
+        method: method,
+        headers: {
+            "Content-Type": "application/json",
+            ...(!!token && { Authorization: `Bearer ${token}` }),
+        },
+        ...(!!data && { body: JSON.stringify(data) }),
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+    });
+}
 
-  _fetch(path, method, body, token) {
-    const url = this._baseUrl + path;
-    return fetch(url, {
-      method,
-      headers: {
-        ...this._headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
-      body,
-    }).then((res) => this._handleResponse(res));
-  }
+export const register = (name, email, password) => {
+    return request({
+        url: "signup",
+        data: { name, email, password },
+    });
+};
 
-  signup(user) {
-    const body = JSON.stringify(user);
-    return this._fetch('/signup', 'POST', body);
-  }
+export const login = (email, password) => {
+    return request({
+        url: "signin",
+        data: { email, password },
+    });
+};
 
-  signin(user) {
-    const body = JSON.stringify(user);
-    return this._fetch('/signin', 'POST', body);
-  }
+export const updateUser = (name, email) => {
+    return request({
+        url: "users/me",
+        method: "PATCH",
+        data: { name, email },
+    });
+};
 
-  updateUserInfo(user, token) {
-    const body = JSON.stringify(user);
-    return this._fetch('/users/me', 'PATCH', body, token);
-  }
+export const checkToken = () => {
+    return request({
+        url: "users/me",
+        method: "GET",
+    });
+};
 
-  getUserInfo(token) {
-    return this._fetch('/users/me', 'GET', null, token);
-  }
+export const logout = () => {
+    return request({
+        url: "signout",
+        method: "DELETE",
+    });
+};
 
-  fetchLikeMovies(token) {
-    return this._fetch('/movies', 'GET', null, token);
-  }
+export const getMovies = () => {
+    return request({
+        url: "movies",
+        method: "GET",
+    });
+};
 
-  addLikeMovie(movie, token) {
-    const body = JSON.stringify(movie);
-    return this._fetch('/movies', 'POST', body, token);
-  }
+const saveMovie = (movie) => {
+    return request({
+        url: "movies",
+        data: {
+            country: movie.country,
+            director: movie.director,
+            duration: movie.duration,
+            year: movie.year,
+            description: movie.description,
+            image:
+                movie.image instanceof Object
+                    ? `https://api.nomoreparties.co/${movie.image.url}`
+                    : movie.image,
+            thumbnail:
+                movie.image instanceof Object
+                    ? `https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`
+                    : movie.thumbnail,
+            trailerLink: movie.trailerLink,
+            movieId: movie.id,
+            nameRU: movie.nameRU,
+            nameEN: movie.nameEN,
+        },
+    });
+};
 
-  deleteLikeMovie(movieId, token) {
-    return this._fetch(`/movies/${movieId}`, 'DELETE', null, token);
-  }
+const deleteSaveMovies = (id) => {
+    return request({
+        url: `movies/${id}`,
+        method: "DELETE",
+    });
+};
+
+export const changeLikeMovieStatus = (movie, isLiked) => {
+    return !isLiked ? saveMovie(movie) : deleteSaveMovies(movie._id);
 };

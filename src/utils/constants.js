@@ -1,100 +1,61 @@
-const VALIDATION_PARAMS = {
-  REGEX: {
-    NAME: /^[a-zа-яё-\s]+$/i,
-    EMAIL: /[^@\s]+@[^@\s]+\.[^@\s]+/i,
-  },
-  MESSAGES: {
-    NAME: 'Имя может состоять только из букв, пробелов и "-"',
-    EMAIL: 'Неправильный формат e-mail',
-    PASSWORD: 'Минимальная длина пароля: 1 символ',
-  },
+export const PAGES = {
+    SIGNIN: '/signin',
+    SIGNUP: '/signup',
+    MAIN: '/',
+    MOVIES: '/movies',
+    PROFILE: '/profile',
+    SAVEDMOVIES: '/saved-movies',
 };
 
-const VALIDATION_CONFIGS = {
-  USER_DATA: {
-    INPUTS: ['name', 'email'],
+export const BASE_URL = "https://api.nomoreparties.co/";
+
+export const VALIDATION_ATTRIBUTES = {
     REGEX: {
-      name: VALIDATION_PARAMS.REGEX.NAME,
-      email: VALIDATION_PARAMS.REGEX.EMAIL,
+        NAME: /^[A-Za-zА-Яа-яЁё /s -]+$/i,
+        EMAIL: /^\S+@\S+\.\S+$/i,
     },
     MESSAGES: {
-      name: VALIDATION_PARAMS.MESSAGES.NAME,
-      email: VALIDATION_PARAMS.MESSAGES.EMAIL,
+        NAME: 'Имя может состоять только из букв, пробелов и дефиса',
+        EMAIL: 'Неправильный формат Email',
     },
-  },
+};
 
-  LOGIN: {
-    INPUTS: ['email'],
-    REGEX: {
-      email: VALIDATION_PARAMS.REGEX.EMAIL,
+export const VALIDATION_CONFIG = {
+    REGISTER_DATA: {
+        INPUTS: ['name', 'email'],
+        REGEX: {
+            name: VALIDATION_ATTRIBUTES.REGEX.NAME,
+            email: VALIDATION_ATTRIBUTES.REGEX.EMAIL,
+        },
+        MESSAGES: {
+            name: VALIDATION_ATTRIBUTES.MESSAGES.NAME,
+            email: VALIDATION_ATTRIBUTES.MESSAGES.EMAIL,
+        },
     },
-    MESSAGES: {
-      email: VALIDATION_PARAMS.MESSAGES.EMAIL,
+    LOGIN_DATA: {
+        INPUTS: ['email'],
+        REGEX: {
+            email: VALIDATION_ATTRIBUTES.REGEX.EMAIL,
+        },
+        MESSAGES: {
+            email: VALIDATION_ATTRIBUTES.MESSAGES.EMAIL,
+        },
     },
-  },
 };
 
-const MESSAGES = {
-  NOT_FOUND: 'Ничего не найдено',
-  ERROR:
-    'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз',
-};
+export const ERROR_MESSAGES =
+    'Во время запроса произошла ошибка.';
 
-const ALERT_MESSAGES = {
-  SUCCESSFULLY: {
-    UPDATE_PROFILE: 'Данные пользователя успешно обновлены',
-    ERROR: {
-      AUTH: 'Неправильные почта или пароль',
-      GET_USER: 'Не удалось получить данные пользователя',
-      ADD_FILM: 'Не удалось добавить фильм',
-      DELETE_FILM: 'Не удалось удалить фильм',
-      SEARCH_QUERY: 'Нужно ввести ключевое слово',
-      UPDATE_PROFILE: 'Не удалось обновить данные профиля',
+export const DISPLAY_MOVIE = {
+    FIRST_REQUEST: {
+        DESKTOP: 12,
+        TABLET: 8,
+        MOBILE: 5,
     },
-  },
+    NEXT_REQUEST: {
+        DESKTOP: 3,
+        TABLET_MOBILE: 2,
+    },
 };
 
-const PAGES = {
-  MOVIES: '/movies',
-  SAVED_MOVIES: '/saved-movies',
-  PROFILE: '/profile',
-  SIGNIN: '/signin',
-  SIGNUP: '/signup',
-  MAIN: '/',
-};
-
-const CARD_COUNT = {
-  SMALL_DEVICE: {
-    ADD: 2,
-    START: 5,
-  },
-  MIDDLE_DEVICE: {
-    ADD: 2,
-    START: 8,
-  },
-  BIG_DEVICE: {
-    ADD: 3,
-    START: 12,
-  },
-};
-
-const CARD_BREAKPOINT = {
-  TWO: 1000,
-  ONE: 700,
-};
-
-const BASE_URL = 'https://api.nomoreparties.co';
-
-const SHORT_DURATION = 40;
-
-export {
-  MESSAGES,
-  PAGES,
-  BASE_URL,
-  CARD_COUNT,
-  CARD_BREAKPOINT,
-  SHORT_DURATION,
-  ALERT_MESSAGES,
-  VALIDATION_PARAMS,
-  VALIDATION_CONFIGS,
-};
+export const SORT_DURATION = 40;
