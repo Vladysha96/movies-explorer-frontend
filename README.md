@@ -19,7 +19,7 @@
 [https://vladysha96.movies.nomoredomains.club](https://vladysha96.movies.nomoredomains.club).
 
 ## Ссылка на Pull requests
-[https://https://github.com/Vladysha96/movies-explorer-frontend/pull/2](https://https://github.com/Vladysha96/movies-explorer-frontend/pull/2).
+[https://github.com/Vladysha96/movies-explorer-frontend/pull/2](https://github.com/Vladysha96/movies-explorer-frontend/pull/2).
 
 ## Макет в Figma
 [Макет по ссылке](https://yadi.sk/d/0mcqyIuFK7XBRA).
