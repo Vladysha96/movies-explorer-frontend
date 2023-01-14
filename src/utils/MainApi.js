@@ -1,4 +1,4 @@
-export const BASE_URL = "http://api.vladysha96.movies.nomoredomains.club/";
+export const BASE_URL = "https://api.vladysha96.movies.nomoredomains.club/";
 
 function request({ url, method = "POST", data, token }) {
     return fetch(`${BASE_URL}${url}`, {
@@ -40,10 +40,11 @@ export const updateUser = (name, email) => {
     });
 };
 
-export const checkToken = () => {
+export const checkToken = (token) => {
     return request({
         url: "users/me",
         method: "GET",
+        token,
     });
 };
 

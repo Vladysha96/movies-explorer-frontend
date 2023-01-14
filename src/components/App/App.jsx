@@ -27,27 +27,115 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
 
   const [allMovies, setAllMovies] = useState([]);
+  const [displayMovies, setDisplayMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [savedFilteredMovies, setSavedFilteredMovies] = useState([]);
-  const [displayMovies, setDisplayMovies] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
-  const [resMessage, setResMessage] = useState('');
-  const [resStatus, setResStatus] = useState(true);
-
   const [isSavedSearch, setIsSavedSearch] = useState(false);
-
   const [stepDisplayMovies, setStepDisplayMovies] = useState(DISPLAY_MOVIE.FIRST_REQUEST.DESKTOP);
-
   const [formValues, setFormValues] = useState({
     // состояние значения и фильтра по короткометражным
     value: '',
     checkbox: '',
   });
+
+  const [resMessage, setResMessage] = useState('');
+  const [resStatus, setResStatus] = useState(true);
+
+  function handleRegister(name, email, password) {
+    return MainApi.register(name, email, password)
+      .then((data) => {
+        if (!data) return;
+        handleLogin({ email, password });
+        setIsLoggedIn(true);
+        setFormValues({
+          value: '',
+          checkbox: '',
+        });
+      })
+      .catch(() => {
+        setIsLoggedIn(false);
+        setIsInfoTooltip(true);
+        setResStatus(false);
+        setResMessage('Произошла ошибка при регистрации. Попробуйте еще раз.');
+      });
+  }
+
+  function handleLogin({ email, password }) {
+    setIsLoggedIn(true);
+    return MainApi.login(email, password)
+      .then((data) => {
+        if (!data) return;
+        setIsLoggedIn(true);
+        setCurrentUser(data);
+        setIsInfoTooltip(true);
+        setFormValues({
+          value: '',
+          checkbox: '',
+        });
+        setResStatus(true);
+        setResMessage('Успешный вход.');
+        history.push(PAGES.MOVIES);
+      })
+      .catch(() => {
+        setCurrentUser({});
+        setIsLoggedIn(false);
+        setIsInfoTooltip(true);
+        setResStatus(false);
+        setResMessage('Неправильные Email или пароль.');
+      });
+  }
+
+  function handleUpdateUser({ name, email }) {
+    return MainApi.updateUser(name, email)
+      .then((data) => {
+        setCurrentUser(data);
+        setIsInfoTooltip(true);
+        setResStatus(true);
+        setResMessage('Данные успешно обновлены.');
+      })
+      .catch(() => {
+        setIsInfoTooltip(true);
+        setResStatus(false);
+        setResMessage('Произошла ошибка при внесении изменений.');
+      });
+  }
+
+  function clearLocalStorage() {
+    moviesLocal.delete();
+    valueLocal.delete();
+    checkboxLocal.delete();
+  }
+
+  function handleLogout() {
+    return MainApi.logout()
+      .then((data) => {
+        if (!data) return;
+        setIsLoggedIn(false);
+        setCurrentUser({});
+        setAllMovies([]);
+        setDisplayMovies([]);
+        setFilteredMovies([]);
+        setSavedMovies([]);
+        setSavedFilteredMovies([]);
+        setFormValues({
+          value: '',
+          checkbox: '',
+        });
+        clearLocalStorage();
+        history.push(PAGES.MAIN);
+      })
+      .catch(() => {
+        setIsLoggedIn(false);
+        setIsInfoTooltip(true);
+        setResStatus(false);
+        setResMessage('Произошла ошибка запроса.');
+      });
+  }
 
   useEffect(() => {
     if (moviesLocal) {
@@ -90,8 +178,7 @@ function App() {
   useEffect(() => {
     if (location.pathname === PAGES.SIGNIN || location.pathname === PAGES.SIGNUP) return;
     if (
-      isLoggedIn &&
-      !savedMovies.length &&
+      isLoggedIn && !savedMovies.length &&
       (location.pathname === PAGES.MOVIES || location.pathname === PAGES.SAVEDMOVIES)
     ) {
       MainApi.getMovies()
@@ -106,7 +193,7 @@ function App() {
     if (location.pathname === PAGES.MOVIES) {
       window.addEventListener('resize', () => {
         setTimeout(() => {
-          window.screen.width < 767
+          window.screen.width < 768
             ? setStepDisplayMovies(DISPLAY_MOVIE.FIRST_REQUEST.MOBILE)
             : window.screen.width > 1280
               ? setStepDisplayMovies(DISPLAY_MOVIE.FIRST_REQUEST.DESKTOP)
@@ -118,7 +205,7 @@ function App() {
     }
   }, [location]);
 
-  // список фильмов по локации
+  // список фильмов
   useEffect(() => {
     setDisplayMovies(
       location.pathname === PAGES.MOVIES
@@ -127,7 +214,7 @@ function App() {
           ? savedFilteredMovies
           : savedMovies
     );
-  }, [filteredMovies, savedMovies, isSavedSearch, savedFilteredMovies, stepDisplayMovies, location]);
+  }, [stepDisplayMovies, savedMovies, isSavedSearch, filteredMovies, savedFilteredMovies, location]);
 
   // получаем фильмы из API
   function handleSearchMovies(value, checkbox) {
@@ -136,18 +223,17 @@ function App() {
       value: value,
       checkbox: checkbox,
     });
-
     valueLocal.save(value);
     checkboxLocal.save(checkbox);
 
     function filter(movies) {
-      window.screen.width < 767
+      window.screen.width < 768
         ? setStepDisplayMovies(DISPLAY_MOVIE.FIRST_REQUEST.MOBILE)
         : window.screen.width > 1280
           ? setStepDisplayMovies(DISPLAY_MOVIE.FIRST_REQUEST.DESKTOP)
           : setStepDisplayMovies(DISPLAY_MOVIE.FIRST_REQUEST.TABLET);
 
-      // фильтры без заглавных букв
+      // фильтры для регистра
       setFilteredMovies(
         movies.filter((i) => {
           if (checkbox) {
@@ -166,10 +252,10 @@ function App() {
       api
         .getMovies()
         .then((movies) => {
-          setAllMovies(movies);
+          setIsLoading(false);
           moviesLocal.save(movies);
           filter(movies);
-          setIsLoading(false);
+          setAllMovies(movies);
           setResStatus(true);
         })
         .catch(() => {
@@ -185,11 +271,9 @@ function App() {
   // фильтр сохраненных фильмов
   function handleSearchSavedMovies(value, checkbox) {
     setIsSavedSearch(true);
-
     const savedSearch = savedMovies.filter((i) => i.nameRU.toLowerCase().includes(value.toLowerCase()));
-
     const savedShortSearch = savedMovies.filter(
-      (i) => i.nameRU.toLowerCase().includes(value.toLowerCase()) && i.SORT_DURATION <= SORT_DURATION
+      (i) => i.nameRU.toLowerCase().includes(value.toLowerCase()) && i.duration <= SORT_DURATION
     );
 
     if (savedSearch || savedShortSearch) {
@@ -199,6 +283,15 @@ function App() {
         setSavedFilteredMovies([...savedSearch]);
       }
     }
+  }
+
+  function handleDurationFilter(value, checkbox) {
+    if (location.pathname === PAGES.MOVIES) {
+      handleSearchMovies(value, checkbox);
+    } else if (location.pathname === PAGES.SAVEDMOVIES) {
+      handleSearchSavedMovies(value, checkbox)
+    }
+    checkboxLocal.save(checkbox);
   }
 
   function handleMovieLike(movie) {
@@ -230,97 +323,6 @@ function App() {
     setStepDisplayMovies(displayMovies.length + step);
   }
 
-  function handleRegister(name, email, password) {
-    return MainApi.register(name, email, password)
-      .then((data) => {
-        if (!data) return
-        setFormValues({
-          value: '',
-          checkbox: '',
-        });
-        handleLogin({ email, password });
-        setIsLoggedIn(true);
-      })
-      .catch(() => {
-        setIsLoggedIn(false);
-        setIsInfoTooltip(true);
-        setResStatus(false);
-        setResMessage('Произошла ошибка при регистрации. Попробуйте еще раз.');
-      });
-  }
-
-  function handleLogin({ email, password }) {
-    setIsLoggedIn(true);
-    return MainApi.login(email, password)
-      .then((data) => {
-        if (!data) return;
-        setFormValues({
-          value: '',
-          checkbox: '',
-        });
-        setCurrentUser(data);
-        setIsLoggedIn(true);
-        setIsInfoTooltip(true);
-        setResStatus(true);
-        setResMessage('Успешный вход.');
-        history.push(PAGES.MOVIES);
-      })
-      .catch(() => {
-        setCurrentUser({});
-        setIsLoggedIn(false);
-        setIsInfoTooltip(true);
-        setResStatus(false);
-        setResMessage('Неправильные Email или пароль.');
-      });
-  }
-
-  function handleUpdateUser({ name, email }) {
-    return MainApi.updateUser(name, email)
-      .then((data) => {
-        setCurrentUser(data);
-        setIsInfoTooltip(true);
-        setResStatus(true);
-        setResMessage("Данные успешно обновлены.");
-      })
-      .catch(() => {
-        setIsInfoTooltip(true);
-        setResStatus(false);
-        setResMessage('Произошла ошибка при внесении изменений.');
-      });
-  }
-
-  function clearLocalStorage() {
-    moviesLocal.delete();
-    valueLocal.delete();
-    checkboxLocal.delete();
-  }
-
-  function handleLogout() {
-    return MainApi.logout()
-      .then((data) => {
-        if (!data) return;
-        setIsLoggedIn(false);
-        setCurrentUser({});
-        setAllMovies([]);
-        setFilteredMovies([]);
-        setSavedMovies([]);
-        setSavedFilteredMovies([]);
-        setDisplayMovies([]);
-        setFormValues({
-          value: '',
-          checkbox: '',
-        });
-        clearLocalStorage();
-        history.push(PAGES.MAIN);
-      })
-      .catch(() => {
-        setIsLoggedIn(false);
-        setIsInfoTooltip(true);
-        setResStatus(false);
-        setResMessage('Произошла ошибка запроса.');
-      });
-  }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
@@ -346,6 +348,7 @@ function App() {
                 isLoading={isLoading}
                 formValues={formValues}
                 resStatus={resStatus}
+                onDurationFilter={handleDurationFilter}
                 onSearchMovies={handleSearchMovies}
                 onLikeMovie={handleMovieLike}
                 onButtonMore={handleButtonMore}
@@ -360,6 +363,7 @@ function App() {
                 isSavedSearchMovies={isSavedSearch}
                 formValues={formValues}
                 resStatus={resStatus}
+                onDurationFilter={handleDurationFilter}
                 handleSearchSavedMovies={handleSearchSavedMovies}
                 onLikeMovie={handleMovieLike}
               />

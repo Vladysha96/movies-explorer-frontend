@@ -4,12 +4,12 @@ import { ERROR_MESSAGES } from "../../../utils/constants";
 import "./MoviesCardList.css";
 
 function MoviesCardList({
-    location,
     isLoading,
     displayMovies,
     savedMovies,
     onLikeMovie,
-    resStatus
+    resStatus,
+    location
 }) {
     return (
         <section className="movies-card-list">
@@ -22,11 +22,11 @@ function MoviesCardList({
                     {displayMovies.map((movie) => {
                         return (
                             <MoviesCard
-                                location={location}
                                 movie={movie}
                                 key={movie.id || movie._id}
                                 savedMovie={savedMovies}
                                 onLikeMovie={onLikeMovie}
+                                location={location}
                             />
                         );
                     })}

@@ -4,7 +4,6 @@ import SearchForm from "../Movies/SearchForm/SearchForm";
 import "./SavedMovies.css";
 
 function SavedMovies({
-    location,
     displayMovies,
     savedMovies,
     savedFilteredMovies,
@@ -12,22 +11,25 @@ function SavedMovies({
     formValues,
     handleSearchSavedMovies,
     onLikeMovie,
+    onDurationFilter,
+    location
 }) {
     return (
         <>
             <main className="main">
                 <SearchForm
-                    location={location}
                     searchSavedMovies={handleSearchSavedMovies}
                     formValues={formValues}
+                    onDurationFilter={onDurationFilter}
+                    location={location}
                 />
                 <MoviesCardList
-                    location={location}
                     displayMovies={displayMovies}
                     savedMovies={savedMovies}
                     savedFilteredMovies={savedFilteredMovies}
                     onLikeMovie={onLikeMovie}
                     resStatus={resStatus}
+                    location={location}
                 />
                 <div className="saved-movies__interval"></div>
             </main>

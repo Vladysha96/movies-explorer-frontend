@@ -1,7 +1,7 @@
+import { useContext, useEffect } from "react";
 import { useFormWithValidation } from "../../hooks/useFormValidation";
 import { VALIDATION_ATTRIBUTES } from "../../utils/constants";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import { useContext, useEffect } from "react";
 import { VALIDATION_CONFIG } from "../../utils/constants";
 import "./Profile.css";
 

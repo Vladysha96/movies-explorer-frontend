@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import Logo from "../Logo/Logo";
 import { useFormWithValidation } from "../../hooks/useFormValidation";
 import { VALIDATION_CONFIG } from "../../utils/constants";
+import Logo from "../Logo/Logo";
 import "./Login.css";
 
 function Login({ onLogin }) {

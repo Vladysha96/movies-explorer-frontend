@@ -1,5 +1,4 @@
 import { useHistory } from "react-router-dom";
-
 import "./NotFound.css";
 
 function NotFound() {
