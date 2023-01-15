@@ -1,13 +1,13 @@
 import './Logo.css';
 import logo from '../../images/logo.svg';
 import { useHistory } from 'react-router-dom';
-import { pages } from '../../utils/constants';
+import { PAGES } from '../../utils/constants';
 
 function Logo() {
     const history = useHistory();
 
     function handleClick() {
-        history.push(pages.Main);
+        history.push(PAGES.MAIN);
     }
 
     return (

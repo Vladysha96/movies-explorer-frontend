@@ -43,6 +43,14 @@
     opacity: 0.8;
 }
 
+.search-form__error {
+    min-height: 12px;
+    margin-top: 10px;
+    color: #ee3465;
+    font-size: 10px;
+    line-height: 12px;
+}
+
 .search-form__switch {
     display: flex;
     align-items: center;

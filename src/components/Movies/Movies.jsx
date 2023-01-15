@@ -1,19 +1,48 @@
 import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
 import MoviesCardList from "./MoviesCardList/MoviesCardList";
 import SearchForm from "./SearchForm/SearchForm";
+import { PAGES } from "../../utils/constants";
 import "./Movies.css";
 
-function Movies() {
+function Movies({
+    allMovies,
+    displayMovies,
+    filteredMovies,
+    savedMovies,
+    resStatus,
+    isLoading,
+    formValues,
+    onSearchMovies,
+    onLikeMovie,
+    onButtonMore,
+    onDurationFilter,
+    location
+}) {
     return (
         <>
-            <Header />
             <main className="main">
-                <SearchForm />
-                <MoviesCardList />
-                <button className="movies__more-button" type="button">
-                    Ещё
-                </button>
+                <SearchForm formValues={formValues} searchMovies={onSearchMovies} location={location} onDurationFilter={onDurationFilter} />
+                {!allMovies.length ? '' : !filteredMovies.length &&
+                    <p className="movies__error-message">Ничего не найдено.</p>
+                }
+                <MoviesCardList
+                    isLoading={isLoading}
+                    displayMovies={displayMovies}
+                    savedMovies={savedMovies}
+                    onLikeMovie={onLikeMovie}
+                    resStatus={resStatus}
+                    location={location}
+                />
+                {location.pathname === PAGES.MOVIES &&
+                    filteredMovies && filteredMovies?.length !== displayMovies?.length && (
+                        <button
+                            className="movies__more-button"
+                            type="button"
+                            onClick={onButtonMore}
+                        >
+                            Ещё
+                        </button>
+                    )}
             </main>
             <Footer />
         </>

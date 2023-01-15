@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
-
+import { PAGES } from "../../utils/constants";
 import "./Navigation.css";
-
-import { pages } from "../../utils/constants";
 
 function Navigation() {
     return (
@@ -12,14 +10,14 @@ function Navigation() {
                     <NavLink
                         className="navigation__link"
                         activeClassName="navigation__link_active"
-                        to={pages.Movies}
+                        to={PAGES.MOVIES}
                     >
                         Фильмы
                     </NavLink>
                     <NavLink
                         className="navigation__link"
                         activeClassName="navigation__link_active"
-                        to={pages.SavedMovies}
+                        to={PAGES.SAVEDMOVIES}
                     >
                         Сохранённые фильмы
                     </NavLink>
@@ -28,7 +26,7 @@ function Navigation() {
                     <NavLink
                         className="navigation__link navigation__link_profile"
                         activeClassName="navigation__link_active"
-                        to={pages.Profile}
+                        to={PAGES.PROFILE}
                     >
                         Аккаунт
                     </NavLink>

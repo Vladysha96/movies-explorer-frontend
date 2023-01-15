@@ -20,6 +20,14 @@
     font-size: 13px;
 }
 
+.movies-card__img {
+    height: 200px;
+}
+
+.movies-card__trailer-link:hover {
+    opacity: 1;
+}
+
 .movies-card__like {
     width: 30px;
     height: 30px;

@@ -1,5 +1,5 @@
 import './BurgerMenu.css';
-import { pages } from "../../../utils/constants";
+import { PAGES } from "../../../utils/constants";
 import { NavLink } from "react-router-dom";
 
 function BurgerMenu({ isOpen }) {
@@ -31,7 +31,7 @@ function BurgerMenu({ isOpen }) {
                     <li className="burger-menu__item">
                         <NavLink
                             className="burger-menu__link"
-                            to={pages.Main}
+                            to={PAGES.MAIN}
                         >
                             Главная
                         </NavLink>
@@ -39,7 +39,7 @@ function BurgerMenu({ isOpen }) {
                     <li className="burger-menu__item">
                         <NavLink
                             className="burger-menu__link"
-                            to={pages.Movies}
+                            to={PAGES.MOVIES}
                         >
                             Фильмы
                         </NavLink>
@@ -47,7 +47,7 @@ function BurgerMenu({ isOpen }) {
                     <li className="burger-menu__item">
                         <NavLink
                             className="burger-menu__link"
-                            to={pages.SavedMovies}
+                            to={PAGES.SAVEDMOVIES}
                         >
                             Сохраненные фильмы
                         </NavLink>
@@ -55,7 +55,7 @@ function BurgerMenu({ isOpen }) {
                 </ul>
                 <NavLink
                     className="burger-menu__account-btn"
-                    to={pages.Profile}
+                    to={PAGES.PROFILE}
                 >
                     Аккаунт
                 </NavLink>
